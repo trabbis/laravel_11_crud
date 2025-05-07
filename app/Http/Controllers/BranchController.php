@@ -11,7 +11,7 @@ class BranchController extends Controller
     public function index(): View
     {
         try {
-            $response = Http::get('https://1644dbbb-3aaa-4c5c-bb98-642b4880ffe6.mock.pstmn.io/users');
+            $response = Http::get('https://0dcfac10-1e98-45d3-9fdf-c0d3a5460bb9.mock.pstmn.io/branches');
             
             if ($response->successful()) {
                 $branches = $response->json();
