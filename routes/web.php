@@ -2,11 +2,11 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\CountryController;
+use App\Http\Controllers\BranchController;
 
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::resource('products', ProductController::class);
-Route::get('/countries', [CountryController::class, 'index'])->name('countries.index');
+Route::get('/branches', [BranchController::class, 'index'])->name('branches.index');
