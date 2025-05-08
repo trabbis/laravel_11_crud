@@ -22,7 +22,8 @@ class MemberController extends Controller
         ]);
 
         // Store in session for multi-step form
-        session(['member.basic_info' => $validated]);
+//        session(['member.basic_info' => $validated]);
+        $request->session()->put('member.basic_info', $validated);
 
         return redirect()->route('member.contact-info');
     }
