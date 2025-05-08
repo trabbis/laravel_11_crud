@@ -16,6 +16,11 @@
             <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $lastName) }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
+        <div>
+            <label for="last_name" class="block text-sm font-medium text-gray-700">Address</label>
+            <input type="text" name="last_name" id="last_name" value="{{ old('street', $address['street']) }} {{ old('city', $address['city']) }}, {{ old('province', $address['province']) }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+        </div>
+
         {{-- <div>
             <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
             <input type="date" name="date_of_birth" id="date_of_birth" value="{{ old('date_of_birth') }}" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500">

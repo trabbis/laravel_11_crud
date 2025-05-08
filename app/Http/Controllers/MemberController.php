@@ -12,12 +12,17 @@ class MemberController extends Controller
 
     public function showBasicInfo(): View
     {
-        $response = Http::get('https://0dcfac10-1e98-45d3-9fdf-c0d3a5460bb9.mock.pstmn.io/memebership');
-        $this->memberData = $response->json();
+        if (!session()->has('memberData')) {
+            $response = Http::get('https://0dcfac10-1e98-45d3-9fdf-c0d3a5460bb9.mock.pstmn.io/memebership');
+            session(['memberData' => $response->json()]);
+        }
+
+        $this->memberData = session('memberData');
 
         return view('member.basic-info', [
             'firstName' => $this->memberData['firstName'] ?? '',
-            'lastName' => $this->memberData['lastName'] ?? ''
+            'lastName' => $this->memberData['lastName'] ?? '',
+            'address' => $this->memberData['address'] ?? '',
         ]);
     }
 
@@ -40,7 +45,12 @@ class MemberController extends Controller
 
     public function showContactInfo(): View
     {
-        return view('member.contact-info');
+        $this->memberData = session('memberData');
+
+        return view('member.contact-info', [
+            'firstName' => $this->memberData['firstName'] ?? '',
+            'address' => $this->memberData['address'] ?? '',
+        ]);
     }
 
     public function storeContactInfo(Request $request)
@@ -109,4 +119,4 @@ class MemberController extends Controller
 
         return redirect()->route('member.success')->with('success', 'Member information has been successfully updated!');
     }
-} 
+}
