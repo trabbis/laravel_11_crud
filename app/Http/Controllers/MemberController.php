@@ -4,26 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Http;
 
 class MemberController extends Controller
 {
+    protected $memberData;
+
     public function showBasicInfo(): View
     {
-        return view('member.basic-info');
+        $response = Http::get('https://0dcfac10-1e98-45d3-9fdf-c0d3a5460bb9.mock.pstmn.io/memebership');
+        $this->memberData = $response->json();
+
+        return view('member.basic-info', [
+            'firstName' => $this->memberData['firstName'] ?? '',
+            'lastName' => $this->memberData['lastName'] ?? ''
+        ]);
     }
 
     public function storeBasicInfo(Request $request)
     {
-        $validated = $request->validate([
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'date_of_birth' => 'required|date',
-            'gender' => 'required|in:male,female,other',
-        ]);
+        // $validated = $request->validate([
+        //     'first_name' => 'required|string|max:255',
+        //     'last_name' => 'required|string|max:255',
+        //     'date_of_birth' => 'required|date',
+        //     'gender' => 'required|in:male,female,other',
+        // ]);
 
         // Store in session for multi-step form
 //        session(['member.basic_info' => $validated]);
-        $request->session()->put('member.basic_info', $validated);
+//        $request->session()->put('member.basic_info', $validated);
+
 
         return redirect()->route('member.contact-info');
     }
@@ -35,16 +45,16 @@ class MemberController extends Controller
 
     public function storeContactInfo(Request $request)
     {
-        $validated = $request->validate([
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:20',
-            'address' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:20',
-        ]);
+        // $validated = $request->validate([
+        //     'email' => 'required|email|max:255',
+        //     'phone' => 'required|string|max:20',
+        //     'address' => 'required|string|max:255',
+        //     'city' => 'required|string|max:255',
+        //     'postal_code' => 'required|string|max:20',
+        // ]);
 
         // Store in session for multi-step form
-        session(['member.contact_info' => $validated]);
+//        session(['member.contact_info' => $validated]);
 
         return redirect()->route('member.additional-info');
     }
