@@ -28,17 +28,22 @@ class MemberController extends Controller
 
     public function storeBasicInfo(Request $request)
     {
-        // $validated = $request->validate([
-        //     'first_name' => 'required|string|max:255',
-        //     'last_name' => 'required|string|max:255',
-        //     'date_of_birth' => 'required|date',
-        //     'gender' => 'required|in:male,female,other',
-        // ]);
+        $validated = $request->validate([
+            // 'first_name' => 'required|string|max:255',
+            // 'last_name' => 'required|string|max:255',
+            // 'date_of_birth' => 'required|date',
+            // 'gender' => 'required|in:male,female,other',
+            'correct' => 'required|in:yes,no',
+        ]);
+
+        if ($validated['correct'] === 'no') {
+            return redirect()->back()
+                ->withErrors(['correct' => 'Because your address or name needs updating, you will have to visit a library branch in person to renew your card.'])
+                ->withInput();
+        }
 
         // Store in session for multi-step form
-//        session(['member.basic_info' => $validated]);
-//        $request->session()->put('member.basic_info', $validated);
-
+        $request->session()->put('member.basic_info', $validated);
 
         return redirect()->route('member.contact-info');
     }
@@ -48,45 +53,55 @@ class MemberController extends Controller
         $this->memberData = session('memberData');
 
         return view('member.contact-info', [
-            'firstName' => $this->memberData['firstName'] ?? '',
             'address' => $this->memberData['address'] ?? '',
         ]);
     }
 
     public function storeContactInfo(Request $request)
     {
-        // $validated = $request->validate([
-        //     'email' => 'required|email|max:255',
-        //     'phone' => 'required|string|max:20',
-        //     'address' => 'required|string|max:255',
-        //     'city' => 'required|string|max:255',
-        //     'postal_code' => 'required|string|max:20',
-        // ]);
+        $validated = $request->validate([
+            'email' => 'required|email|max:255',
+        ]);
+
+        $this->memberData = session('memberData');
+        $originalEmail = $this->memberData['address']['email'] ?? '';
 
         // Store in session for multi-step form
-//        session(['member.contact_info' => $validated]);
+        $request->session()->put('member.contact_info', $validated);
+
+        // Check if email has been changed
+        if ($validated['email'] !== $originalEmail) {
+            return redirect()->route('member.additional-info')
+                ->with('email_changed', 'Please check your email for confirmation.');
+        }
 
         return redirect()->route('member.additional-info');
     }
 
     public function showAdditionalInfo(): View
     {
-        return view('member.additional-info');
+        $this->memberData = session('memberData');
+
+        return view('member.additional-info', [
+            'address' => $this->memberData['address'] ?? '',
+            'personalInfo' => $this->memberData['personalInfo'] ?? '',
+        ]);
     }
 
     public function storeAdditionalInfo(Request $request)
     {
+        //TODO phone number validation
         $validated = $request->validate([
-            'occupation' => 'required|string|max:255',
-            'company' => 'nullable|string|max:255',
-            'interests' => 'nullable|array',
-            'preferences' => 'nullable|array',
+            'phone' => 'required|max:255',
+            'gender' => 'required|in:male,female,DNIDENTIFY,preferNotToSay',
         ]);
 
         // Store in session for multi-step form
         session(['member.additional_info' => $validated]);
 
-        return redirect()->route('member.review');
+        //TODO for now go to the first page
+        return redirect()->route('member.basic-info');
+//        return redirect()->route('member.review');
     }
 
     public function showReview(): View

@@ -8,18 +8,41 @@
     <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
         <div>
             <label for="first_name" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" name="first_name" id="first_name" value="{{ old('first_name', $firstName) }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <input type="text" name="first_name" id="first_name" value="{{$firstName}}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="last_name" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" name="last_name" id="last_name" value="{{ old('last_name', $lastName) }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <input type="text" name="last_name" id="last_name" value="{{$lastName}}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
 
         <div>
             <label for="last_name" class="block text-sm font-medium text-gray-700">Address</label>
-            <input type="text" name="last_name" id="last_name" value="{{ old('street', $address['street']) }} {{ old('city', $address['city']) }}, {{ old('province', $address['province']) }}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+            <input type="text" name="last_name" id="last_name" value="{{$address['street']}} {{$address['city']}}, {{$address['province']}}" readonly class="mt-1 block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm focus:border-blue-500 focus:ring-blue-500">
         </div>
+
+        <div>
+        </div>
+
+        <div>
+            <label class="block text-sm font-medium text-gray-700">Is this information correct and up to date?</label>
+            <div class="mt-2 space-y-2">
+                <div class="flex items-center">
+                    <input type="radio" name="correct" value="yes" id="correct_yes" {{ old('correct') == 'yes' ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="correct_yes" class="ml-2 block text-sm text-gray-700">Yes</label>
+                </div>
+            </div>
+            <div class="mt-2 space-y-2">
+                <div class="flex items-center">
+                    <input type="radio" name="correct" value="no" id="correct_no" {{ old('correct') == 'no' ? 'checked' : '' }} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                    <label for="correct_no" class="ml-2 block text-sm text-gray-700">No</label>
+                </div>
+            </div>
+            @error('correct')
+                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+            @enderror
+        </div>
+
 
         {{-- <div>
             <label for="date_of_birth" class="block text-sm font-medium text-gray-700">Date of Birth</label>
